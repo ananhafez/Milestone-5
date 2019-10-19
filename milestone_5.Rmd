@@ -1,0 +1,49 @@
+---
+title: "Milestone-5"
+author: "Anan Hafez"
+date: "10/17/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(tidyverse)
+library(janitor)
+library(tidyr)
+library(stringr)
+library(httr)
+library(RCurl)
+library(lubridate)
+library(readxl)
+library(gt)
+library(reshape2)
+library(ggplot2)
+library(purrr)
+library(moderndive)
+library(fs)
+library(infer)
+library(googlesheets4)
+library(scales)
+sheets_deauth()
+```
+
+```{r}
+dirty_nba_stats <- read.csv("nba_stats_clean.csv")
+
+nba_stats <- dirty_nba_stats 
+```
+
+```{r}
+player_career_stats <- read.csv("players.csv")
+
+dirty_player_salaries <- read.csv("salaries_1985to2018.csv")
+
+player_salaries <- player_career_stats %>% left_join(dirty_player_salaries, by = c("X_id" = "player_id")) %>% select(name, season_start, salary, team)
+```
+
+```{r}
+full_stats <- nba_stats %>% left_join(player_salaries, by = c("Player" = "name", "Season" = "season_start")) 
+```
+
+I've loved the game of basketball since I was a young kid. Growing up in Los Angeles, I loved going to Lakers games with my dad, watching them win two championships in a row, and buying as many Kobe Bryant jerseys as my parents would let me. I even played in a YMCA basketball league and my team won the championship! (Would you believe that?) Over the years though, I've seen a massive shift the way basketball is played. Every kid now wants to be like Steph Curry, shooting from super far away and repeatedly making it. In recent years, teams are allegedly taking many more 3-point shots than when I was a kid and point totals are rising becuase of it. Games that used end with with 80 or 90 points now regularly end with over 100, 110, and sometimes 120 points. I wanted to test this theory with R. Are players really taking more 3-point shots than ever before, or are they just playing faster? Hopefully, with many visualizations and (finally) clean code, I can see how and why professional basketball has changed in the past few decades. 
+
